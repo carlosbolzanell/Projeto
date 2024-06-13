@@ -22,6 +22,7 @@ export default function Editar({id, emailProps, setModalState}: EditarProps) {
             email: userEmail
         }
         await patchRequests(id.toString(), newUserEmail)
+        setModalState(false)
     }
 
     useEffect(()=>{
