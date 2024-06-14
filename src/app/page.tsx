@@ -9,11 +9,35 @@ import { User } from "@nextui-org/react";
 import { FaTrash } from "react-icons/fa6";
 import { RiPencilFill } from "react-icons/ri";
 import Editar from "@/components/Modals/Editar";
+import { getFile } from "@/service/fileService";
 
 export default function Home() {
   const router = useRouter()
 
   const [users, setUsers] = useState<UserType[]>([])
+  const [user, setUser] = useState<UserType>()
+  const [file, setFile] = useState<File | null>(null)
+  const [image, setImage] = useState<String | ArrayBuffer | null>(null)
+
+
+  const getImage = async () => {
+    const fileGetted = await getFile("/imagem").then(response => response)
+    setFile(fileGetted)
+  }
+
+  const renderImage = () => {
+    if (file) {
+      const reader: FileReader = new FileReader()
+
+      const fodase = file as Blob
+      console.log(fodase instanceof Blob) 
+
+      reader.readAsDataURL(file as Blob)
+      reader.onload = () => {
+        setImage(reader.result)
+      }
+    }
+  }
 
   const getAllUsers = async () => {
     const usersTooked = await getRequests("/buscarUsuarios").then(response => response)
@@ -25,6 +49,11 @@ export default function Home() {
     setUsers(newUsers)
   }
 
+  const editUser = (user: UserType) => {
+    setOpenEdition(true)
+    setUser(user)
+  }
+
   const [openSignin, setOpenSignin] = useState<boolean>(false)
   const [openEdition, setOpenEdition] = useState<boolean>(false)
 
@@ -33,6 +62,12 @@ export default function Home() {
       getAllUsers()
     }
   }, [openSignin, users])
+
+  useEffect(()=>{
+    if(file){
+      renderImage()
+    }
+  },[openSignin])
 
 
   return (
@@ -45,18 +80,13 @@ export default function Home() {
           {
             users?.map((user) => (
               <div className="flex flex-row items-center justify-between gap-5 w-full" key={user.id}>
-                <User name={user.nome} description={user.email} />
+                <User name={user.nome} description={user.email} avatarProps={{
+                  src: image as string
+                }} />
                 <div className="flex flex-row items-end justify-end gap-4 w-[40%]">
-                  <RiPencilFill onClick={()=>setOpenEdition(true)}/>
+                  <RiPencilFill onClick={() => editUser(user)} />
                   <FaTrash onClick={() => deleteUser(user.id!)} />
                 </div>
-                {
-                  openEdition && (
-                    <div className="absolute w-full">
-                      <Editar setModalState={setOpenEdition} emailProps={user.email} id={user.id!} />
-                    </div>
-                  )
-                }
               </div>
             ))
           }
@@ -67,8 +97,14 @@ export default function Home() {
           <div className="absolute w-full">
             <Cadastro setModalState={setOpenSignin} />
           </div>
+        ) || openEdition && (
+          (
+            <div className="absolute w-full">
+              <Editar setModalState={setOpenEdition} emailProps={user!.email} id={user!.id!} />
+            </div>
+          )
         )
-        
+
       }
     </main>
   );

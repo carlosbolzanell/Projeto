@@ -1,5 +1,6 @@
 export interface UserType {
-    id?: number
+    id?: number,
+    image?: Blob | null
     nome: string,
     email: string,
     senha: string

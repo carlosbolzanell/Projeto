@@ -36,7 +36,6 @@ export default function Editar({id, emailProps, setModalState}: EditarProps) {
                 <section className='flex flex-col items-center bg-cyan-200 rounded-xl'>
                     <h1 className='text-2xl font-outfit mt-3'>Cadastro</h1>
                     <div className='w-[90%] my-3 flex flex-col gap-3'>
-
                         <Input
                             type={'email'}
                             label='Digite seu email'
