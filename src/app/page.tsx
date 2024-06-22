@@ -10,6 +10,7 @@ import { FaTrash } from "react-icons/fa6";
 import { RiPencilFill } from "react-icons/ri";
 import Editar from "@/components/Modals/Editar";
 import { getFile } from "@/service/fileService";
+import InfoTwoButtons from "@/components/Modals/InfoTwoButtons";
 
 export default function Home() {
   const router = useRouter()
@@ -30,7 +31,7 @@ export default function Home() {
       const reader: FileReader = new FileReader()
 
       const fodase = file as Blob
-      console.log(fodase instanceof Blob) 
+      console.log(fodase instanceof Blob)
 
       reader.readAsDataURL(file as Blob)
       reader.onload = () => {
@@ -50,24 +51,25 @@ export default function Home() {
   }
 
   const editUser = (user: UserType) => {
-    setOpenEdition(true)
     setUser(user)
   }
 
   const [openSignin, setOpenSignin] = useState<boolean>(false)
   const [openEdition, setOpenEdition] = useState<boolean>(false)
+  const [openInfo, setOpenInfo] = useState<boolean>(false)
+  const [yes, setYes] = useState<boolean>(false)
 
   useEffect(() => {
     if (!openSignin) {
       getAllUsers()
     }
-  }, [openSignin, users])
+  }, [openSignin, users, openInfo])
 
-  useEffect(()=>{
-    if(file){
-      renderImage()
+  useEffect(() => {
+    if (yes) {
+      deleteUser(user!.id!)
     }
-  },[openSignin])
+  },[yes])
 
 
   return (
@@ -79,13 +81,11 @@ export default function Home() {
         <div className="flex flex-col gap-4 bg-sky-50 p-8 rounded-2xl mt-10 items-start">
           {
             users?.map((user) => (
-              <div className="flex flex-row items-center justify-between gap-5 w-full" key={user.id}>
-                <User name={user.nome} description={user.email} avatarProps={{
-                  src: image as string
-                }} />
+              <div className="flex flex-row items-center justify-between gap-5 w-full" key={user.id} onClick={() => editUser(user)}>
+                <User name={user.nome} description={user.email} />
                 <div className="flex flex-row items-end justify-end gap-4 w-[40%]">
-                  <RiPencilFill onClick={() => editUser(user)} />
-                  <FaTrash onClick={() => deleteUser(user.id!)} />
+                  <RiPencilFill onClick={() => setOpenEdition(true)} />
+                  <FaTrash onClick={() => setOpenInfo(true)} />
                 </div>
               </div>
             ))
@@ -103,6 +103,10 @@ export default function Home() {
               <Editar setModalState={setOpenEdition} emailProps={user!.email} id={user!.id!} />
             </div>
           )
+        ) || openInfo && (
+          <div className="absolute w-full">
+            <InfoTwoButtons setModalState={setOpenInfo} setResponse={setYes} />
+          </div>
         )
 
       }

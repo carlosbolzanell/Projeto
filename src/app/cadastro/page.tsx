@@ -27,7 +27,7 @@ export default function Cadastro() {
 
     return (
         <main className='flex items-center justify-center'>
-            <section className='flex flex-col items-center bg-cyan-200 w-[50%] rounded-xl'>
+            <section className='flex flex-col items-center bg-cyan-200 w-[30%] rounded-xl'>
                 <h1 className='text-2xl font-outfit mt-3'>Cadastro</h1>
                 <div className='w-[90%] my-3 flex flex-col gap-3'>
                     <Input 

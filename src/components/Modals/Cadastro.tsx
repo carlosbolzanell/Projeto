@@ -16,6 +16,8 @@ export default function Cadastro({ setModalState }: CadastroProps) {
     const [userEmail, setUserEmail] = useState<string>("")
     const [userPassword, setUserPassword] = useState<string>("")
 
+    const [invalid, setInvalid] = useState<boolean>(false)
+
     const [openModal, setOpenModal] = useState<boolean>(true)
 
     useEffect(() => {
@@ -56,6 +58,10 @@ export default function Cadastro({ setModalState }: CadastroProps) {
             email: userEmail,
             senha: userPassword
         }
+        if(userName == '' || userEmail == '' || userPassword == ''){
+            setInvalid(true)
+            return
+        }
         postRequests("", user)
         if(file){
             uploadImage()
@@ -66,29 +72,39 @@ export default function Cadastro({ setModalState }: CadastroProps) {
     return (
         <div className='absolute'>
             <div className='fixed top-0 left-0 w-full h-full z-50  bg-fundo-modal' onClick={() => setOpenModal(false)}></div>
-            <div className={`fixed w-[60%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50`}>
+            <div className={`fixed w-[40%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50`}>
                 <section className='flex flex-col items-center bg-cyan-200 rounded-xl'>
                     <h1 className='text-2xl font-outfit mt-3'>Cadastro</h1>
                     <div className='w-[90%] my-3 flex flex-col gap-3'>
-                        <div className='h-24 w-24 rounded-full border border-black flex items-center justify-center'>
-                            <img src={(image as string)} alt="" className='w-full h-full rounded-full object-cover' />
-                        </div>
-                        <input type="file" name="" id="inputFile" onChange={(e) => setFile(e.target.files![0])} />
                         <Input
                             label='Digite seu nome'
-                            onChange={(e) => setUserName(e.target.value)} />
+                            onChange={(e) => setUserName(e.target.value)}
+                            color={`${invalid && userName == '' ? 'danger': 'default'}`}
+                            errorMessage='Nome inválido'
+                            isInvalid={invalid && userName == ''} 
+                        />
 
                         <Input
                             type={'email'}
                             label='Digite seu email'
-                            onChange={(e) => setUserEmail(e.target.value)} />
+                            onChange={(e) => setUserEmail(e.target.value)}
+                            color={`${invalid && userEmail == '' ? 'danger': 'default'}`}
+                            errorMessage='Email inválido'
+                            isInvalid={invalid && userEmail == ''}
+                        />
 
                         <Input
                             type={'password'}
                             label='Digite sua senha'
-                            onChange={(e) => setUserPassword(e.target.value)} />
-
-                        <Button onClick={() => sendUser()} >Cadastro</Button>
+                            onChange={(e) => setUserPassword(e.target.value)}
+                            color={`${invalid && userPassword == '' ? 'danger': 'default'}`}
+                            errorMessage='Senha inválida'
+                            isInvalid={invalid && userPassword == ''} 
+                        />
+                        <div className='flex justify-center'>
+                            <Button className='w-40 bg-red-800 text-white'>Adicionar Pet</Button>
+                        </div>
+                        <Button variant='solid' color='success' onClick={() => sendUser()} >Cadastro</Button>
                     </div>
                 </section>
             </div>
