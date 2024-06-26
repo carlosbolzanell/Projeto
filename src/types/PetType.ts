@@ -2,7 +2,7 @@ import { UserType } from "./UserType"
 
 export interface PetType{
     nome: string
-    dono: UserType
+    dono?: UserType
     idade: number
     raca: string
 }

@@ -3,6 +3,9 @@ import { Button, Input } from '@nextui-org/react'
 import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react'
 import { postRequests } from '@/service/usuarioService'
 import { UserType } from '@/types/UserType'
+import CadastroPet from './CadastrarPet'
+import CadastrarPet from './CadastrarPet'
+import { PetType } from '@/types/PetType'
 
 interface CadastroProps {
     setModalState: React.Dispatch<SetStateAction<boolean>>
@@ -10,13 +13,13 @@ interface CadastroProps {
 
 export default function Cadastro({ setModalState }: CadastroProps) {
 
-    const [file, setFile] = useState<Blob | null>(null)
-    const [image, setImage] = useState<string | ArrayBuffer | null>("")
     const [userName, setUserName] = useState<string>("")
     const [userEmail, setUserEmail] = useState<string>("")
     const [userPassword, setUserPassword] = useState<string>("")
 
     const [invalid, setInvalid] = useState<boolean>(false)
+    const [openPet, setOpenPet] = useState<boolean>(false)
+    const [pets, setPets] = useState<PetType[]>([])
 
     const [openModal, setOpenModal] = useState<boolean>(true)
 
@@ -24,48 +27,18 @@ export default function Cadastro({ setModalState }: CadastroProps) {
         setModalState(openModal)
     }, [openModal])
 
-    useEffect(() => {
-        getImage()
-    }, [file])
-
-    const getImage = () => {
-        if (file) {
-            const reader: FileReader = new FileReader();
-            reader.onload = () => {
-                setImage(reader.result)
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    const uploadImage = async () => {
-        const formData = new FormData();
-        formData.append('file', file!);
-
-        try {
-            const response = await postRequests("/arquivo", formData)
-
-        }catch(err){
-            console.log(err)
-        }
-
-    }
-
     const sendUser = () => {
         const user: UserType = {
-            image: file,
             nome: userName,
             email: userEmail,
-            senha: userPassword
+            senha: userPassword,
+            pets: pets
         }
         if(userName == '' || userEmail == '' || userPassword == ''){
             setInvalid(true)
             return
         }
         postRequests("", user)
-        if(file){
-            uploadImage()
-        }
         setOpenModal(false)
     }
 
@@ -102,12 +75,17 @@ export default function Cadastro({ setModalState }: CadastroProps) {
                             isInvalid={invalid && userPassword == ''} 
                         />
                         <div className='flex justify-center'>
-                            <Button className='w-40 bg-red-800 text-white'>Adicionar Pet</Button>
+                            <Button className='w-40 bg-red-800 text-white' onClick={()=>setOpenPet(true)}>Adicionar Pet</Button>
                         </div>
                         <Button variant='solid' color='success' onClick={() => sendUser()} >Cadastro</Button>
                     </div>
                 </section>
             </div>
+            {
+                openPet && (
+                    <CadastrarPet setModalState={setOpenPet} updatePets={setPets} petsUpdateds={pets}/>
+                )
+            }
         </div>
     )
 }

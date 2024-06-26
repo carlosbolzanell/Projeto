@@ -9,7 +9,6 @@ import { User } from "@nextui-org/react";
 import { FaTrash } from "react-icons/fa6";
 import { RiPencilFill } from "react-icons/ri";
 import Editar from "@/components/Modals/Editar";
-import { getFile } from "@/service/fileService";
 import InfoTwoButtons from "@/components/Modals/InfoTwoButtons";
 
 export default function Home() {
@@ -17,28 +16,6 @@ export default function Home() {
 
   const [users, setUsers] = useState<UserType[]>([])
   const [user, setUser] = useState<UserType>()
-  const [file, setFile] = useState<File | null>(null)
-  const [image, setImage] = useState<String | ArrayBuffer | null>(null)
-
-
-  const getImage = async () => {
-    const fileGetted = await getFile("/imagem").then(response => response)
-    setFile(fileGetted)
-  }
-
-  const renderImage = () => {
-    if (file) {
-      const reader: FileReader = new FileReader()
-
-      const fodase = file as Blob
-      console.log(fodase instanceof Blob)
-
-      reader.readAsDataURL(file as Blob)
-      reader.onload = () => {
-        setImage(reader.result)
-      }
-    }
-  }
 
   const getAllUsers = async () => {
     const usersTooked = await getRequests("/buscarUsuarios").then(response => response)
