@@ -15,7 +15,7 @@ const config: Config = {
         "outfit": ['Outfit', 'sans-serif']
       },
       backgroundColor: {
-        "fundo-modal": 'rgba(0, 0, 0, 0.3)',
+        "fundo-modal": 'rgba(0, 0, 0, 0.3 )',
       }
     },
   },
