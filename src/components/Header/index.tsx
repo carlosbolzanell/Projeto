@@ -1,5 +1,5 @@
 'use client'
-import { Button } from '@nextui-org/react'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -12,8 +12,8 @@ export default function Header() {
           logo
         </div>
         <div className='flex flex-row gap-4 font-poppins'>
-          <Button className='bg-lime-200' onPress={()=>router.push('login')}>Login</Button>
-          <Button className='bg-lime-200' onPress={()=>router.push('cadastro')}>Cadastro</Button>
+          <Button className='bg-lime-200' onClick={()=>router.push('login')}>Login</Button>
+          <Button className='bg-lime-200' onClick={()=>router.push('cadastro')}>Cadastro</Button>
         </div>
       </div>
     </header>

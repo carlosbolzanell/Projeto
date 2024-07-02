@@ -1,13 +1,29 @@
 'use client'
-import { Button, Input } from '@nextui-org/react'
+import { userRegister } from '@/service/usuarioService';
+import { useToast } from "@/components/ui/use-toast"
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import React, { FormEvent } from 'react'
 
 export default function Cadastro() {
 
-    const cadastroUsuario = (e: FormData) => {
+    const { toast } = useToast()
+
+    const cadastroUsuario = async (e: FormData) => {
         const rawFormData = Object.fromEntries(e);
+        const user = rawFormData
         
-        console.log(rawFormData)
+        try{
+            const response =  await userRegister(user)
+            toast({
+                title: response,
+            })
+        }catch(err){
+            toast({
+                title: "User already exist!",
+                variant: "destructive" 
+            })
+        }
     }
 
     return (
@@ -18,20 +34,17 @@ export default function Cadastro() {
                     <h1 className='text-white font-bold mb-4 text-xl'>Cadastro</h1>
                     <form action={cadastroUsuario} className='w-[90%] flex flex-col gap-8'>
                         <Input
-                            name='nome'
-                            label='Nome'
-                            variant='flat'
+                            name='username'
+                            placeholder='Nome'
                         />
                         <Input
-                            name='login'
-                            label='Login'
-                            variant='flat'
+                            name='email'
+                            placeholder='E-mail'
                         />
                         <Input
-                            name='senha'
-                            label='Senha'
+                            name='password'
+                            placeholder='Senha'
                             type={'password'}
-                            variant='flat'
                         />
                         <Button className='bg-lime-200' type='submit'>Cadastro</Button>
                     </form>
