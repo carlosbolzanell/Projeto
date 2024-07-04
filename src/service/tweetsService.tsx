@@ -1,11 +1,8 @@
-import { FeedType, TweetType } from '@/types/TweetType';
-import axios, { AxiosResponse } from 'axios';
-
-const axiosClient = axios.create()
-
-axiosClient.defaults.baseURL = 'http://localhost:8082/tweet'
+import { FeedType } from '@/types/TweetType';
+import { AxiosResponse } from 'axios';
+import { api } from "./api"
 
 export async function getTweetsFeed() {
-    const response: AxiosResponse<FeedType> = await axiosClient.get('/feed').then(response => response)
+    const response: AxiosResponse<FeedType> = await api.get('/tweet/feed').then(response => response)
     return response.data
 }

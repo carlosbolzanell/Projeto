@@ -2,27 +2,21 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
-import { loginUser } from '@/service/tokenService'
-import { TokenType } from '@/types/TokenType'
-import { useRouter } from 'next/navigation'
 
 import React, { useEffect, useState } from 'react'
+import { useAuthContext } from '@/context/AuthContext'
+import { signInData } from '@/types/UserType'
 
 export default function Login() {
-    const router = useRouter()
-    const [token, setToken] = useState<TokenType>()
 
-    useEffect(()=>{
-        localStorage.setItem('token', JSON.stringify(token))
-    }, [token])
+    const { signIn } = useAuthContext()
 
     const login = async (e: FormData) =>{
-        const rawFormData = Object.fromEntries(e)
+        const rawFormData = Object.fromEntries(e) as unknown as signInData
 
         try{
-            const response = await loginUser(rawFormData);
-            setToken(response);
-            router.push("/feed");  
+            await signIn(rawFormData)
+
         }catch(err){
             toast({
                 title: "Credentials are not valids!",
