@@ -23,6 +23,7 @@ const config = {
         "outfit": ['Outfit', 'sans-serif']
       },
       colors: {
+        fundoModal: "rgba(0,0,0,0.3)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

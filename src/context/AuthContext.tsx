@@ -26,6 +26,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
         if (token) {
             getUserByToken().then(response => setUser(response));
+        }else{
+            router.push("/login")
         }
 
     }, [])
